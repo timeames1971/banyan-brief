@@ -208,9 +208,15 @@
             <input type="time" id="time" required>
           </div>
         </div>
-        <div class="field">
-          <label for="fuel">Fuel — Gallons</label>
-          <input type="number" id="fuel" min="1" max="9999" placeholder="0" required>
+        <div class="row">
+          <div class="field">
+            <label for="fuel">Fuel — Gallons</label>
+            <input type="number" id="fuel" min="1" max="9999" placeholder="0" required>
+          </div>
+          <div class="field">
+            <label for="pax">Passengers</label>
+            <input type="number" id="pax" min="0" max="99" placeholder="0" required>
+          </div>
         </div>
         <div class="field">
           <label for="catering">Catering <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#3d4f6a">(optional)</span></label>
@@ -231,6 +237,7 @@
     const dateEl = document.getElementById('date');
     const timeEl = document.getElementById('time');
     const fuelEl = document.getElementById('fuel');
+    const paxEl = document.getElementById('pax');
     const cateringEl = document.getElementById('catering');
     const previewEl = document.getElementById('preview');
 
@@ -272,15 +279,16 @@
       const date = dateEl.value;
       const time = timeEl.value;
       const fuel = fuelEl.value || '___';
+      const pax = paxEl.value || '___';
       const catering = cateringEl.value.trim() || 'None';
-      return `Good ${getGreeting()},\n\nN120KA is departing at ${formatTime(time)} on ${formatDate(date)}. Please have ${fuel} gallons of Jet-A ready. Catering: ${catering}.\n\nThank you,\nTim Eames`;
+      return `Good ${getGreeting()},\n\nN120KA is departing at ${formatTime(time)} on ${formatDate(date)} with ${pax} passenger${pax === '1' ? '' : 's'}. Please have ${fuel} gallons of Jet-A ready. Catering: ${catering}.\n\nThank you,\nTim Eames`;
     }
 
     function updatePreview() {
       previewEl.textContent = buildBody();
     }
 
-    [dateEl, timeEl, fuelEl, cateringEl].forEach(el => {
+    [dateEl, timeEl, fuelEl, paxEl, cateringEl].forEach(el => {
       el.addEventListener('input', updatePreview);
     });
 
