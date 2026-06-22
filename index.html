@@ -8,7 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Banyan Brief">
-  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Banyan%20Brief%22%2C%22short_name%22%3A%22Banyan%20Brief%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b1120%22%2C%22theme_color%22%3A%22%230b1120%22%7D">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -285,22 +286,8 @@
       window.location.href = `mailto:frontdesk@banyanair.com?subject=N120KA&body=${encodeURIComponent(body)}`;
     });
 
-    // Register SW via blob for offline caching
     if ('serviceWorker' in navigator) {
-      const sw = `
-        const CACHE='banyan-v1';
-        self.addEventListener('install',()=>self.skipWaiting());
-        self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
-        self.addEventListener('fetch',e=>{
-          e.respondWith(caches.open(CACHE).then(c=>c.match(e.request).then(r=>{
-            return r||(fetch(e.request).then(res=>{c.put(e.request,res.clone());return res;}));
-          })));
-        });
-      `;
-      try {
-        const blob = new Blob([sw], { type: 'application/javascript' });
-        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
-      } catch (_) {}
+      navigator.serviceWorker.register('sw.js').catch(() => {});
     }
   </script>
 </body>
