@@ -208,6 +208,10 @@
             <input type="time" id="time" required>
           </div>
         </div>
+        <div class="field">
+          <label for="destination">Destination</label>
+          <input type="text" id="destination" placeholder="e.g. KFLL" required>
+        </div>
         <div class="row">
           <div class="field">
             <label for="fuel">Fuel — Gallons</label>
@@ -237,6 +241,7 @@
     const dateEl = document.getElementById('date');
     const timeEl = document.getElementById('time');
     const fuelEl = document.getElementById('fuel');
+    const destinationEl = document.getElementById('destination');
     const paxEl = document.getElementById('pax');
     const cateringEl = document.getElementById('catering');
     const previewEl = document.getElementById('preview');
@@ -278,17 +283,18 @@
     function buildBody() {
       const date = dateEl.value;
       const time = timeEl.value;
+      const destination = destinationEl.value.trim().toUpperCase() || '___';
       const fuel = fuelEl.value || '___';
       const pax = paxEl.value || '___';
       const catering = cateringEl.value.trim() || 'None';
-      return `Good ${getGreeting()},\n\nN120KA is departing at ${formatTime(time)} on ${formatDate(date)} with ${pax} passenger${pax === '1' ? '' : 's'}. Please have ${fuel} gallons of Jet-A ready. Catering: ${catering}.\n\nThank you,\nTim Eames`;
+      return `Good ${getGreeting()},\n\nN120KA is departing at ${formatTime(time)} on ${formatDate(date)} to ${destination} with ${pax} passenger${pax === '1' ? '' : 's'}. Please have ${fuel} gallons of Jet-A ready. Catering: ${catering}.\n\nThank you,\nTim Eames`;
     }
 
     function updatePreview() {
       previewEl.textContent = buildBody();
     }
 
-    [dateEl, timeEl, fuelEl, paxEl, cateringEl].forEach(el => {
+    [dateEl, timeEl, destinationEl, fuelEl, paxEl, cateringEl].forEach(el => {
       el.addEventListener('input', updatePreview);
     });
 
