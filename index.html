@@ -204,7 +204,7 @@
             <input type="date" id="date" required>
           </div>
           <div class="field">
-            <label for="time">Arrival Time</label>
+            <label for="time">Departure Time</label>
             <input type="time" id="time" required>
           </div>
         </div>
@@ -213,8 +213,8 @@
           <input type="number" id="fuel" min="1" max="9999" placeholder="0" required>
         </div>
         <div class="field">
-          <label for="catering">Catering</label>
-          <input type="text" id="catering" value="None">
+          <label for="catering">Catering <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#3d4f6a">(optional)</span></label>
+          <input type="text" id="catering" placeholder="None">
         </div>
         <div class="divider"></div>
         <button type="submit">Send Brief to Banyan</button>
@@ -262,12 +262,18 @@
       return `${h12}:${pad(min)} ${ampm}`;
     }
 
+    function buildSubject() {
+      return dateEl.value
+        ? `N120KA – ${formatDate(dateEl.value)}`
+        : 'N120KA';
+    }
+
     function buildBody() {
       const date = dateEl.value;
       const time = timeEl.value;
       const fuel = fuelEl.value || '___';
       const catering = cateringEl.value.trim() || 'None';
-      return `Good ${getGreeting()},\n\nPlease have ${fuel} gallons of Jet-A ready for N120KA arriving at ${formatTime(time)} on ${formatDate(date)}. Catering: ${catering}.\n\nThank you,\nTim Eames`;
+      return `Good ${getGreeting()},\n\nN120KA is departing at ${formatTime(time)} on ${formatDate(date)}. Please have ${fuel} gallons of Jet-A ready. Catering: ${catering}.\n\nThank you,\nTim Eames`;
     }
 
     function updatePreview() {
@@ -283,7 +289,7 @@
     document.getElementById('form').addEventListener('submit', function (e) {
       e.preventDefault();
       const body = buildBody();
-      window.location.href = `mailto:frontdesk@banyanair.com?subject=N120KA&body=${encodeURIComponent(body)}`;
+      window.location.href = `mailto:frontdesk@banyanair.com?subject=${encodeURIComponent(buildSubject())}&body=${encodeURIComponent(body)}`;
     });
 
     if ('serviceWorker' in navigator) {
