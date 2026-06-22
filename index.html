@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banyan Brief</title>
+  <meta name="theme-color" content="#0b1120">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Banyan Brief">
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Banyan%20Brief%22%2C%22short_name%22%3A%22Banyan%20Brief%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b1120%22%2C%22theme_color%22%3A%22%230b1120%22%7D">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b1120;
+      --surface: #121b2e;
+      --border: #1d2d44;
+      --accent: #e8a020;
+      --accent-dim: rgba(232,160,32,0.12);
+      --text: #dce6f5;
+      --muted: #5a6a85;
+      --input-bg: #0d1525;
+      --radius: 12px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
+    .tail {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+      letter-spacing: 0.06em;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field:last-of-type {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 11px 13px;
+      color: var(--text);
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.5) sepia(1) saturate(2) hue-rotate(10deg);
+      opacity: 0.6;
+      cursor: pointer;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      opacity: 0.4;
+    }
+
+    input::placeholder {
+      color: var(--muted);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 0 20px;
+    }
+
+    button {
+      width: 100%;
+      background: var(--accent);
+      color: #0b1120;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: opacity 0.12s, transform 0.1s;
+      font-family: inherit;
+    }
+
+    button:hover { opacity: 0.92; }
+    button:active { opacity: 0.8; transform: scale(0.99); }
+
+    .preview-wrap {
+      margin-top: 16px;
+    }
+
+    .preview-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .preview {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 14px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: #8a9ab8;
+      white-space: pre-wrap;
+      font-family: inherit;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="eyebrow">Flight Dispatch</div>
+      <h1>Banyan Brief</h1>
+      <div class="tail">N120KA</div>
+    </header>
+
+    <div class="card">
+      <form id="form">
+        <div class="row">
+          <div class="field">
+            <label for="date">Date</label>
+            <input type="date" id="date" required>
+          </div>
+          <div class="field">
+            <label for="time">Arrival Time</label>
+            <input type="time" id="time" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="fuel">Fuel — Gallons</label>
+          <input type="number" id="fuel" min="1" max="9999" placeholder="0" required>
+        </div>
+        <div class="field">
+          <label for="catering">Catering</label>
+          <input type="text" id="catering" value="None">
+        </div>
+        <div class="divider"></div>
+        <button type="submit">Send Brief to Banyan</button>
+      </form>
+
+      <div class="preview-wrap">
+        <div class="preview-label">Preview</div>
+        <div class="preview" id="preview">Fill in the form above to preview your brief.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dateEl = document.getElementById('date');
+    const timeEl = document.getElementById('time');
+    const fuelEl = document.getElementById('fuel');
+    const cateringEl = document.getElementById('catering');
+    const previewEl = document.getElementById('preview');
+
+    // Default to today
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    dateEl.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+    function getGreeting() {
+      const h = new Date().getHours();
+      if (h < 12) return 'morning';
+      if (h < 18) return 'afternoon';
+      return 'evening';
+    }
+
+    function formatDate(str) {
+      if (!str) return '___';
+      const [y, m, d] = str.split('-').map(Number);
+      return new Date(y, m - 1, d).toLocaleDateString('en-US', {
+        month: 'long', day: 'numeric', year: 'numeric'
+      });
+    }
+
+    function formatTime(str) {
+      if (!str) return '___';
+      const [h, min] = str.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const h12 = h % 12 || 12;
+      return `${h12}:${pad(min)} ${ampm}`;
+    }
+
+    function buildBody() {
+      const date = dateEl.value;
+      const time = timeEl.value;
+      const fuel = fuelEl.value || '___';
+      const catering = cateringEl.value.trim() || 'None';
+      return `Good ${getGreeting()},\n\nPlease have ${fuel} gallons of Jet-A ready for N120KA arriving at ${formatTime(time)} on ${formatDate(date)}. Catering: ${catering}.\n\nThank you,\nTim Eames`;
+    }
+
+    function updatePreview() {
+      previewEl.textContent = buildBody();
+    }
+
+    [dateEl, timeEl, fuelEl, cateringEl].forEach(el => {
+      el.addEventListener('input', updatePreview);
+    });
+
+    updatePreview();
+
+    document.getElementById('form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const body = buildBody();
+      window.location.href = `mailto:frontdesk@banyanair.com?subject=N120KA&body=${encodeURIComponent(body)}`;
+    });
+
+    // Register SW via blob for offline caching
+    if ('serviceWorker' in navigator) {
+      const sw = `
+        const CACHE='banyan-v1';
+        self.addEventListener('install',()=>self.skipWaiting());
+        self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
+        self.addEventListener('fetch',e=>{
+          e.respondWith(caches.open(CACHE).then(c=>c.match(e.request).then(r=>{
+            return r||(fetch(e.request).then(res=>{c.put(e.request,res.clone());return res;}));
+          })));
+        });
+      `;
+      try {
+        const blob = new Blob([sw], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+      } catch (_) {}
+    }
+  </script>
+</body>
+</html>
