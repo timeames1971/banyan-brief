@@ -271,10 +271,42 @@
     const cateringEl = document.getElementById('catering');
     const previewEl = document.getElementById('preview');
 
-    // Default to today
-    const now = new Date();
     const pad = n => String(n).padStart(2, '0');
+
+    const STORAGE_KEY = 'banyan-brief-form';
+
+    function saveForm() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          date: dateEl.value,
+          time: timeEl.value,
+          destination: destinationEl.value,
+          fuel: fuelEl.value,
+          pax: paxEl.value,
+          catering: cateringEl.value,
+          notes: notesEl.value,
+        }));
+      } catch (_) {}
+    }
+
+    function restoreForm() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+        if (!saved) return;
+        if (saved.date) dateEl.value = saved.date;
+        if (saved.time) timeEl.value = saved.time;
+        if (saved.destination !== undefined) destinationEl.value = saved.destination;
+        if (saved.fuel !== undefined) fuelEl.value = saved.fuel;
+        if (saved.pax !== undefined) paxEl.value = saved.pax;
+        if (saved.catering !== undefined) cateringEl.value = saved.catering;
+        if (saved.notes !== undefined) notesEl.value = saved.notes;
+      } catch (_) {}
+    }
+
+    // Default to today, then let saved state override
+    const now = new Date();
     dateEl.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    restoreForm();
 
     function getGreeting() {
       const h = new Date().getHours();
@@ -322,7 +354,7 @@
     }
 
     [dateEl, timeEl, destinationEl, fuelEl, paxEl, cateringEl, notesEl].forEach(el => {
-      el.addEventListener('input', updatePreview);
+      el.addEventListener('input', () => { updatePreview(); saveForm(); });
     });
 
     updatePreview();

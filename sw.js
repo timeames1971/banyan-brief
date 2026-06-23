@@ -1,10 +1,11 @@
-const CACHE = 'banyan-brief-v1';
+const CACHE = 'banyan-brief-v2';
 const ASSETS = [
   '/banyan-brief/',
   '/banyan-brief/index.html',
   '/banyan-brief/manifest.json',
   '/banyan-brief/icon-192.png',
-  '/banyan-brief/icon-512.png'
+  '/banyan-brief/icon-512.png',
+  '/banyan-brief/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', e => {
