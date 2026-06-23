@@ -71,6 +71,13 @@
       letter-spacing: 0.06em;
     }
 
+    .version {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 3px;
+      opacity: 0.6;
+    }
+
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -214,6 +221,7 @@
       <div class="eyebrow">Flight Dispatch</div>
       <h1>Banyan Brief</h1>
       <div class="tail">N120KA</div>
+      <div class="version">Version 2.2</div>
     </header>
 
     <div class="card">
@@ -224,31 +232,17 @@
             <input type="date" id="date" required>
           </div>
           <div class="field">
-            <label for="time">Departure Time</label>
+            <label for="time">On-the-line time</label>
             <input type="time" id="time" required>
           </div>
         </div>
         <div class="field">
-          <label for="destination">Destination</label>
-          <input type="text" id="destination" placeholder="e.g. KFLL" required>
-        </div>
-        <div class="row">
-          <div class="field">
-            <label for="fuel">Fuel — Gallons</label>
-            <input type="number" id="fuel" min="1" max="9999" placeholder="0" required>
-          </div>
-          <div class="field">
-            <label for="pax">Passengers</label>
-            <input type="number" id="pax" min="0" max="99" placeholder="0" required>
-          </div>
+          <label for="fuel">Gallons negative</label>
+          <input type="number" id="fuel" min="0" max="9999" placeholder="0" required>
         </div>
         <div class="field">
           <label for="catering">Catering <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#3d4f6a">(optional)</span></label>
-          <input type="text" id="catering" placeholder="None">
-        </div>
-        <div class="field">
-          <label for="notes">Notes <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#3d4f6a">(optional)</span></label>
-          <textarea id="notes" placeholder="Any additional details…" rows="3"></textarea>
+          <textarea id="catering" placeholder="Describe catering requirements…" rows="3"></textarea>
         </div>
         <div class="divider"></div>
         <button type="submit">Send Brief to Banyan</button>
@@ -256,36 +250,30 @@
 
       <div class="preview-wrap">
         <div class="preview-label">Preview</div>
-        <div class="preview" id="preview">Fill in the form above to preview your brief.</div>
+        <div class="preview" id="preview"></div>
       </div>
     </div>
   </div>
 
   <script>
-    const dateEl = document.getElementById('date');
-    const timeEl = document.getElementById('time');
-    const fuelEl = document.getElementById('fuel');
-    const destinationEl = document.getElementById('destination');
-    const notesEl = document.getElementById('notes');
-    const paxEl = document.getElementById('pax');
-    const cateringEl = document.getElementById('catering');
-    const previewEl = document.getElementById('preview');
+    const TAIL = 'N120KA';
+    const STORAGE_KEY = 'banyanBriefDraftV3';
+    const VERSION = '2.2.0';
+
+    const fields = {
+      date: document.getElementById('date'),
+      time: document.getElementById('time'),
+      fuel: document.getElementById('fuel'),
+      catering: document.getElementById('catering')
+    };
 
     const pad = n => String(n).padStart(2, '0');
 
-    const STORAGE_KEY = 'banyan-brief-form';
-
     function saveForm() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          date: dateEl.value,
-          time: timeEl.value,
-          destination: destinationEl.value,
-          fuel: fuelEl.value,
-          pax: paxEl.value,
-          catering: cateringEl.value,
-          notes: notesEl.value,
-        }));
+        const data = {};
+        Object.keys(fields).forEach(k => { data[k] = fields[k].value; });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       } catch (_) {}
     }
 
@@ -293,76 +281,79 @@
       try {
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
         if (!saved) return;
-        if (saved.date) dateEl.value = saved.date;
-        if (saved.time) timeEl.value = saved.time;
-        if (saved.destination !== undefined) destinationEl.value = saved.destination;
-        if (saved.fuel !== undefined) fuelEl.value = saved.fuel;
-        if (saved.pax !== undefined) paxEl.value = saved.pax;
-        if (saved.catering !== undefined) cateringEl.value = saved.catering;
-        if (saved.notes !== undefined) notesEl.value = saved.notes;
+        Object.keys(fields).forEach(k => {
+          if (saved[k] !== undefined) fields[k].value = saved[k];
+        });
       } catch (_) {}
     }
 
     // Default to today, then let saved state override
     const now = new Date();
-    dateEl.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    fields.date.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
     restoreForm();
 
-    function getGreeting() {
+    function greeting() {
       const h = new Date().getHours();
       if (h < 12) return 'morning';
       if (h < 18) return 'afternoon';
       return 'evening';
     }
 
-    function formatDate(str) {
-      if (!str) return '___';
-      const [y, m, d] = str.split('-').map(Number);
-      return new Date(y, m - 1, d).toLocaleDateString('en-US', {
-        month: 'long', day: 'numeric', year: 'numeric'
+    function formatDate(value) {
+      if (!value) return '[date]';
+      const [year, month, day] = value.split('-').map(Number);
+      return new Date(year, month - 1, day).toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric'
       });
     }
 
-    function formatTime(str) {
-      if (!str) return '___';
-      const [h, min] = str.split(':').map(Number);
+    function formatTime(value) {
+      if (!value) return '[time]';
+      const [h, min] = value.split(':').map(Number);
       const ampm = h >= 12 ? 'PM' : 'AM';
       const h12 = h % 12 || 12;
       return `${h12}:${pad(min)} ${ampm}`;
     }
 
     function buildSubject() {
-      return dateEl.value
-        ? `N120KA – ${formatDate(dateEl.value)}`
-        : 'N120KA';
+      return `${TAIL} – On the line ${formatDate(fields.date.value)}`;
     }
 
     function buildBody() {
-      const date = dateEl.value;
-      const time = timeEl.value;
-      const destination = destinationEl.value.trim().toUpperCase() || '___';
-      const fuel = fuelEl.value || '___';
-      const pax = paxEl.value || '___';
-      const catering = cateringEl.value.trim() || 'None';
-      const notes = notesEl.value.trim();
-      const notesLine = notes ? `\n\nNotes: ${notes}` : '';
-      return `Good ${getGreeting()},\n\nN120KA is departing at ${formatTime(time)} on ${formatDate(date)} to ${destination} with ${pax} passenger${pax === '1' ? '' : 's'}. Please have ${fuel} gallons of Jet-A ready. Catering: ${catering}.${notesLine}\n\nThank you,\nTim Eames`;
+      const fuel = fields.fuel.value === '' ? '[fuel]' : fields.fuel.value;
+      const catering = fields.catering.value.trim();
+
+      const lines = [
+        `Good ${greeting()} on duty`,
+        '',
+        `Please have the aircraft on the line at ${formatTime(fields.time.value)} on ${formatDate(fields.date.value)}, with ${fuel} gallons negative.`
+      ];
+
+      if (catering) lines.push('', catering);
+
+      lines.push('', 'Regards,', 'Tim Eames', '(561) 202-4974');
+      return lines.join('\n');
     }
 
     function updatePreview() {
-      previewEl.textContent = buildBody();
+      document.getElementById('preview').textContent = buildBody();
     }
 
-    [dateEl, timeEl, destinationEl, fuelEl, paxEl, cateringEl, notesEl].forEach(el => {
+    Object.values(fields).forEach(el => {
       el.addEventListener('input', () => { updatePreview(); saveForm(); });
+    });
+
+    document.getElementById('form').addEventListener('reset', () => {
+      setTimeout(() => fields.fuel.focus(), 0);
     });
 
     updatePreview();
 
-    document.getElementById('form').addEventListener('submit', function (e) {
+    document.getElementById('form').addEventListener('submit', function(e) {
       e.preventDefault();
-      const body = buildBody();
-      window.location.href = `mailto:frontdesk@banyanair.com?subject=${encodeURIComponent(buildSubject())}&body=${encodeURIComponent(body)}`;
+      window.location.href = `mailto:frontdesk@banyanair.com?subject=${encodeURIComponent(buildSubject())}&body=${encodeURIComponent(buildBody())}`;
     });
 
     if ('serviceWorker' in navigator) {

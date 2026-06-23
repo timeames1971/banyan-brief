@@ -1,7 +1,7 @@
 {
   "name": "Banyan Brief",
   "short_name": "Banyan Brief",
-  "description": "Flight dispatch for N120KA",
+  "description": "On-the-line request for N120KA",
   "start_url": "/banyan-brief/",
   "scope": "/banyan-brief/",
   "display": "standalone",
