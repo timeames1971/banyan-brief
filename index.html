@@ -232,7 +232,7 @@
       <div class="eyebrow">Flight Dispatch</div>
       <h1>Banyan Brief</h1>
       <div class="tail">N120KA</div>
-      <div class="version">Version 2.3</div>
+      <div class="version">Version 2.3.1</div>
     </header>
 
     <div class="card">
@@ -255,6 +255,10 @@
           <label for="catering">Catering <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#3d4f6a">(optional)</span></label>
           <textarea id="catering" placeholder="Describe catering requirements…" rows="3"></textarea>
         </div>
+        <div class="field">
+          <label for="extra">Additional information for the email <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#3d4f6a">(optional)</span></label>
+          <textarea id="extra" placeholder="Example: A passenger left a telephone in the aircraft. Please contact me immediately. I am on my way." rows="5"></textarea>
+        </div>
         <div class="divider"></div>
         <button type="submit">Send Brief to Banyan</button>
       </form>
@@ -269,13 +273,14 @@
   <script>
     const TAIL = 'N120KA';
     const STORAGE_KEY = 'banyanBriefDraftV3';
-    const VERSION = '2.3.0';
+    const VERSION = '2.3.1';
 
     const fields = {
       date: document.getElementById('date'),
       time: document.getElementById('time'),
       fuel: document.getElementById('fuel'),
-      catering: document.getElementById('catering')
+      catering: document.getElementById('catering'),
+      extra: document.getElementById('extra')
     };
 
     const pad = n => String(n).padStart(2, '0');
@@ -335,6 +340,7 @@
     function buildBody() {
       const fuel = fields.fuel.value === '' ? '[fuel]' : fields.fuel.value;
       const catering = fields.catering.value.trim();
+      const extra = fields.extra.value.trim();
 
       const lines = [
         `Good ${greeting()} on duty`,
@@ -343,6 +349,8 @@
       ];
 
       if (catering) lines.push('', catering);
+
+      if (extra) lines.push('', 'Additional Information', extra);
 
       lines.push('', 'Regards,', 'Tim Eames', '(561) 202-4974');
       return lines.join('\n');
@@ -365,6 +373,11 @@
     document.getElementById('form').addEventListener('submit', function(e) {
       e.preventDefault();
       window.location.href = `mailto:frontdesk@banyanair.com?subject=${encodeURIComponent(buildSubject())}&body=${encodeURIComponent(buildBody())}`;
+      this.reset();
+      const n = new Date();
+      fields.date.value = `${n.getFullYear()}-${pad(n.getMonth() + 1)}-${pad(n.getDate())}`;
+      try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+      updatePreview();
     });
 
     if ('serviceWorker' in navigator) {

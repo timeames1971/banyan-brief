@@ -1,4 +1,4 @@
-const CACHE = 'banyan-brief-v2.3.0';
+const CACHE = 'banyan-brief-v2.3.1';
 const ASSETS = [
   '/banyan-brief/',
   '/banyan-brief/index.html',
