@@ -134,8 +134,28 @@
       opacity: 0.4;
     }
 
-    input::placeholder {
+    input::placeholder, textarea::placeholder {
       color: var(--muted);
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 11px 13px;
+      color: var(--text);
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
     }
 
     .divider {
@@ -226,6 +246,10 @@
           <label for="catering">Catering <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#3d4f6a">(optional)</span></label>
           <input type="text" id="catering" placeholder="None">
         </div>
+        <div class="field">
+          <label for="notes">Notes <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#3d4f6a">(optional)</span></label>
+          <textarea id="notes" placeholder="Any additional details…" rows="3"></textarea>
+        </div>
         <div class="divider"></div>
         <button type="submit">Send Brief to Banyan</button>
       </form>
@@ -242,6 +266,7 @@
     const timeEl = document.getElementById('time');
     const fuelEl = document.getElementById('fuel');
     const destinationEl = document.getElementById('destination');
+    const notesEl = document.getElementById('notes');
     const paxEl = document.getElementById('pax');
     const cateringEl = document.getElementById('catering');
     const previewEl = document.getElementById('preview');
@@ -287,14 +312,16 @@
       const fuel = fuelEl.value || '___';
       const pax = paxEl.value || '___';
       const catering = cateringEl.value.trim() || 'None';
-      return `Good ${getGreeting()},\n\nN120KA is departing at ${formatTime(time)} on ${formatDate(date)} to ${destination} with ${pax} passenger${pax === '1' ? '' : 's'}. Please have ${fuel} gallons of Jet-A ready. Catering: ${catering}.\n\nThank you,\nTim Eames`;
+      const notes = notesEl.value.trim();
+      const notesLine = notes ? `\n\nNotes: ${notes}` : '';
+      return `Good ${getGreeting()},\n\nN120KA is departing at ${formatTime(time)} on ${formatDate(date)} to ${destination} with ${pax} passenger${pax === '1' ? '' : 's'}. Please have ${fuel} gallons of Jet-A ready. Catering: ${catering}.${notesLine}\n\nThank you,\nTim Eames`;
     }
 
     function updatePreview() {
       previewEl.textContent = buildBody();
     }
 
-    [dateEl, timeEl, destinationEl, fuelEl, paxEl, cateringEl].forEach(el => {
+    [dateEl, timeEl, destinationEl, fuelEl, paxEl, cateringEl, notesEl].forEach(el => {
       el.addEventListener('input', updatePreview);
     });
 
