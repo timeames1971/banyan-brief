@@ -10,6 +10,7 @@
   <meta name="apple-mobile-web-app-title" content="Banyan Brief">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="favicon-96.png" type="image/png" sizes="96x96">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -76,6 +77,15 @@
       color: var(--muted);
       margin-top: 3px;
       opacity: 0.6;
+    }
+
+    .app-logo {
+      display: block;
+      width: 96px;
+      height: auto;
+      max-width: 100%;
+      margin: 0 auto 14px;
+      border-radius: 20px;
     }
 
     .card {
@@ -218,10 +228,11 @@
 <body>
   <div class="container">
     <header>
+      <img src="banyan-icon-master.png" alt="Banyan Air" class="app-logo">
       <div class="eyebrow">Flight Dispatch</div>
       <h1>Banyan Brief</h1>
       <div class="tail">N120KA</div>
-      <div class="version">Version 2.2</div>
+      <div class="version">Version 2.3</div>
     </header>
 
     <div class="card">
@@ -258,7 +269,7 @@
   <script>
     const TAIL = 'N120KA';
     const STORAGE_KEY = 'banyanBriefDraftV3';
-    const VERSION = '2.2.0';
+    const VERSION = '2.3.0';
 
     const fields = {
       date: document.getElementById('date'),
