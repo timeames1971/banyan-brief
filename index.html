@@ -18,11 +18,12 @@
       --bg: #0b1120;
       --surface: #121b2e;
       --border: #1d2d44;
+      --input-border: #2c4a68;
       --accent: #e8a020;
-      --accent-dim: rgba(232,160,32,0.12);
+      --accent-dim: rgba(232,160,32,0.14);
       --text: #dce6f5;
       --muted: #5a6a85;
-      --input-bg: #0d1525;
+      --input-bg: #080e1c;
       --radius: 12px;
     }
 
@@ -100,11 +101,11 @@
     }
 
     .field {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .field:last-of-type {
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     label {
@@ -113,14 +114,14 @@
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: #7a8fa8;
       margin-bottom: 7px;
     }
 
     input {
       width: 100%;
       background: var(--input-bg);
-      border: 1px solid var(--border);
+      border: 1.5px solid var(--input-border);
       border-radius: 9px;
       padding: 11px 13px;
       color: var(--text);
@@ -134,7 +135,7 @@
 
     input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-dim);
+      box-shadow: 0 0 0 2.5px var(--accent-dim);
     }
 
     input[type="date"]::-webkit-calendar-picker-indicator,
@@ -150,13 +151,13 @@
     }
 
     input::placeholder, textarea::placeholder {
-      color: var(--muted);
+      color: #4d6280;
     }
 
     textarea {
       width: 100%;
       background: var(--input-bg);
-      border: 1px solid var(--border);
+      border: 1.5px solid var(--input-border);
       border-radius: 9px;
       padding: 11px 13px;
       color: var(--text);
@@ -170,7 +171,7 @@
 
     textarea:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-dim);
+      box-shadow: 0 0 0 2.5px var(--accent-dim);
     }
 
     .divider {
@@ -198,7 +199,7 @@
     button:active { opacity: 0.8; transform: scale(0.99); }
 
     .preview-wrap {
-      margin-top: 16px;
+      margin-top: 20px;
     }
 
     .preview-label {
@@ -206,15 +207,15 @@
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: #4a6080;
       margin-bottom: 8px;
     }
 
     .preview {
-      background: var(--input-bg);
-      border: 1px solid var(--border);
+      background: #0a1220;
+      border: 1px dashed #243850;
       border-radius: 9px;
-      padding: 14px;
+      padding: 16px 14px;
       font-size: 13px;
       line-height: 1.65;
       color: #8a9ab8;
@@ -230,7 +231,7 @@
       <div class="eyebrow">Flight Dispatch</div>
       <h1>Banyan Brief</h1>
       <div class="tail">N120KA</div>
-      <div class="version">Version 2.3.2</div>
+      <div class="version">Version 2.3.3</div>
     </header>
 
     <div class="card">
@@ -271,7 +272,7 @@
   <script>
     const TAIL = 'N120KA';
     const STORAGE_KEY = 'banyanBriefDraftV3';
-    const VERSION = '2.3.2';
+    const VERSION = '2.3.3';
 
     const fields = {
       date: document.getElementById('date'),
