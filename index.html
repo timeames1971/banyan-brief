@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Banyan Brief</title>
   <meta name="theme-color" content="#0b1120">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -31,17 +31,15 @@
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
       min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
       -webkit-font-smoothing: antialiased;
     }
 
     .container {
       width: 100%;
-      max-width: 400px;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      box-sizing: border-box;
     }
 
     header {
@@ -232,7 +230,7 @@
       <div class="eyebrow">Flight Dispatch</div>
       <h1>Banyan Brief</h1>
       <div class="tail">N120KA</div>
-      <div class="version">Version 2.3.1</div>
+      <div class="version">Version 2.3.2</div>
     </header>
 
     <div class="card">
@@ -273,7 +271,7 @@
   <script>
     const TAIL = 'N120KA';
     const STORAGE_KEY = 'banyanBriefDraftV3';
-    const VERSION = '2.3.1';
+    const VERSION = '2.3.2';
 
     const fields = {
       date: document.getElementById('date'),
